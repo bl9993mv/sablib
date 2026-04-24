@@ -1,0 +1,164 @@
+local Players = game:GetService("Players")
+local player = Players.LocalPlayer
+local playerGui = player:WaitForChild("PlayerGui")
+
+task.wait(3)
+
+local screenGui = Instance.new("ScreenGui")
+screenGui.Name = "ForceOGLuckyBlock"
+screenGui.ResetOnSpawn = false
+
+if gethui then
+    screenGui.Parent = gethui()
+elseif syn and syn.protect_gui then
+    syn.protect_gui(screenGui)
+    screenGui.Parent = game:GetService("CoreGui")
+elseif protect_gui then
+    protect_gui(screenGui)
+    screenGui.Parent = game:GetService("CoreGui")
+else
+    pcall(function()
+        screenGui.Parent = game:GetService("CoreGui")
+    end)
+    if not screenGui.Parent then
+        screenGui.Parent = playerGui
+    end
+end
+
+-- Main panel
+local panel = Instance.new("Frame")
+panel.Size = UDim2.new(0, 280, 0, 145)
+panel.Position = UDim2.new(0, 16, 0, 16)
+panel.BackgroundColor3 = Color3.fromRGB(18, 13, 0)
+panel.BorderSizePixel = 0
+panel.Active = true
+panel.Draggable = true
+panel.Parent = screenGui
+Instance.new("UICorner", panel).CornerRadius = UDim.new(0, 8)
+local panelStroke = Instance.new("UIStroke", panel)
+panelStroke.Color = Color3.fromRGB(58, 40, 0)
+panelStroke.Thickness = 1
+
+-- Titlebar
+local titleBar = Instance.new("Frame")
+titleBar.Size = UDim2.new(1, 0, 0, 32)
+titleBar.BackgroundColor3 = Color3.fromRGB(30, 20, 0)
+titleBar.BorderSizePixel = 0
+titleBar.Parent = panel
+Instance.new("UICorner", titleBar).CornerRadius = UDim.new(0, 8)
+
+local titleLabel = Instance.new("TextLabel")
+titleLabel.Size = UDim2.new(1, -12, 1, 0)
+titleLabel.Position = UDim2.new(0, 12, 0, 0)
+titleLabel.BackgroundTransparency = 1
+titleLabel.Text = "FORCE OG LUCKY BLOCK"
+titleLabel.TextColor3 = Color3.fromRGB(255, 215, 85)
+titleLabel.Font = Enum.Font.GothamBold
+titleLabel.TextSize = 13
+titleLabel.TextXAlignment = Enum.TextXAlignment.Left
+titleLabel.Parent = titleBar
+
+-- Divider
+local divider = Instance.new("Frame")
+divider.Size = UDim2.new(1, 0, 0, 1)
+divider.Position = UDim2.new(0, 0, 0, 32)
+divider.BackgroundColor3 = Color3.fromRGB(40, 28, 0)
+divider.BorderSizePixel = 0
+divider.Parent = panel
+
+-- Status box
+local statusBox = Instance.new("Frame")
+statusBox.Size = UDim2.new(1, -24, 0, 30)
+statusBox.Position = UDim2.new(0, 12, 0, 42)
+statusBox.BackgroundColor3 = Color3.fromRGB(10, 8, 0)
+statusBox.BorderSizePixel = 0
+statusBox.Parent = panel
+Instance.new("UICorner", statusBox).CornerRadius = UDim.new(0, 6)
+local sbStroke = Instance.new("UIStroke", statusBox)
+sbStroke.Color = Color3.fromRGB(42, 30, 0)
+sbStroke.Thickness = 1
+
+local countLabel = Instance.new("TextLabel")
+countLabel.Size = UDim2.new(1, -12, 1, 0)
+countLabel.Position = UDim2.new(0, 12, 0, 0)
+countLabel.BackgroundTransparency = 1
+countLabel.Text = "Patched: 0"
+countLabel.TextColor3 = Color3.fromRGB(90, 61, 0)
+countLabel.Font = Enum.Font.Code
+countLabel.TextSize = 12
+countLabel.TextXAlignment = Enum.TextXAlignment.Left
+countLabel.Parent = statusBox
+
+local statusLabel = Instance.new("TextLabel")
+statusLabel.Size = UDim2.new(0, 100, 1, 0)
+statusLabel.Position = UDim2.new(1, -108, 0, 0)
+statusLabel.BackgroundTransparency = 1
+statusLabel.Text = ""
+statusLabel.TextColor3 = Color3.fromRGB(85, 221, 136)
+statusLabel.Font = Enum.Font.Code
+statusLabel.TextSize = 11
+statusLabel.TextXAlignment = Enum.TextXAlignment.Right
+statusLabel.Parent = statusBox
+
+-- Execute button
+local execBtn = Instance.new("TextButton")
+execBtn.Size = UDim2.new(1, -24, 0, 30)
+execBtn.Position = UDim2.new(0, 12, 0, 82)
+execBtn.BackgroundColor3 = Color3.fromRGB(255, 215, 85)
+execBtn.TextColor3 = Color3.fromRGB(18, 13, 0)
+execBtn.Font = Enum.Font.GothamBold
+execBtn.TextSize = 13
+execBtn.Text = "FORCE OG LUCKY BLOCK"
+execBtn.BorderSizePixel = 0
+execBtn.Parent = panel
+Instance.new("UICorner", execBtn).CornerRadius = UDim.new(0, 6)
+
+-- Sub text
+local subText = Instance.new("TextLabel")
+subText.Size = UDim2.new(1, -24, 0, 20)
+subText.Position = UDim2.new(0, 12, 0, 118)
+subText.BackgroundTransparency = 1
+subText.Text = "MAKE SURE TO NOT LEAVE WITHIN 5 MINS OR IT WILL NOT WORK"
+subText.TextColor3 = Color3.fromRGB(100, 70, 0)
+subText.Font = Enum.Font.Code
+subText.TextSize = 9
+subText.TextWrapped = true
+subText.TextXAlignment = Enum.TextXAlignment.Center
+subText.Parent = panel
+
+-- Logic
+local patchCount = 0
+local hasExecuted = false
+
+local function changeText(v)
+    if v:IsA("TextLabel") and v.Text == "Secret" then
+        v.Text = "OG"
+        v.TextColor3 = Color3.fromRGB(255, 221, 85)
+        if not v:FindFirstChildOfClass("UIStroke") then
+            local stroke = Instance.new("UIStroke")
+            stroke.Color = Color3.fromRGB(0, 0, 0)
+            stroke.Thickness = 2
+            stroke.Parent = v
+        end
+        patchCount += 1
+        countLabel.Text = "Patched: " .. patchCount
+    end
+end
+
+execBtn.MouseButton1Click:Connect(function()
+    if hasExecuted then return end
+    hasExecuted = true
+
+    execBtn.Text = "APPLIED"
+    execBtn.BackgroundColor3 = Color3.fromRGB(85, 221, 136)
+    execBtn.Active = false
+    statusLabel.Text = "Active"
+
+    for _, v in pairs(game:GetDescendants()) do
+        changeText(v)
+    end
+
+    game.DescendantAdded:Connect(function(v)
+        changeText(v)
+    end)
+end)
